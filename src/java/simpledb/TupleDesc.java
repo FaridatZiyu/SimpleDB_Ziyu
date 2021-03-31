@@ -47,6 +47,10 @@ public class TupleDesc implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    private int numFields; // Number of fields in TupleDesc
+
+    private TDItem tdAr; // TupleDesc Array
+
     /**
      * Create a new TupleDesc with typeAr.length fields with fields of the
      * specified types, with associated named fields.
@@ -60,10 +64,22 @@ public class TupleDesc implements Serializable {
      */
     public TupleDesc(Type[] typeAr, String[] fieldAr) {
         // some code goes here
+        if (typeAr.length == 0) {
+            // TODO: Throw: Type array must have at least one element.
+        }
+        if (typeAr.length != fieldAr.length) {
+            // TODO: Throw: Type array must be the same length as field array.
+        }
+
+        numFields = typeAr.length;
+        tdAr = new TDItem[numFields];
+        for (int i = 0; i<numFields; i++) {
+            tdAr[i] = new TDItem(typeAr[i], fieldAr[i]);
+        }
     }
 
     /**
-     * Constructor. Create a new tuple desc with typeAr.length fields with
+     * Constructor. Create a new TupleDesc with typeAr.length fields with
      * fields of the specified types, with anonymous (unnamed) fields.
      * 
      * @param typeAr
@@ -72,6 +88,25 @@ public class TupleDesc implements Serializable {
      */
     public TupleDesc(Type[] typeAr) {
         // some code goes here
+        String[] str = new String[typeAr.length];
+        this(typeAr, str);
+    }
+
+    /**
+     * Create a new TupleDesc with TDItem.length fields with fields of the
+     * specified types, with associated named fields.
+     * 
+     * @param td
+     *            array specifying the number of and types of and the names of
+     *            fields in this TupleDesc. It must contain at least one entry.
+     */
+    public TupleDesc(TDItem[] td) {
+        // some code goes here
+        if (td.length == 0) {
+            // TODO: Throw TDItem array must have at least one element.
+        }
+        this.typeAr = td;
+        this.numFields = td.length;
     }
 
     /**
