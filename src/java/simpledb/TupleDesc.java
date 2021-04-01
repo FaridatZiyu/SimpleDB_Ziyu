@@ -94,8 +94,8 @@ public class TupleDesc implements Serializable {
      */
     public TupleDesc(Type[] typeAr) {
         // some code goes here
-        String[] str = new String[typeAr.length];
-        this(typeAr, str);
+        // String[] str = new String[typeAr.length];
+        this(typeAr, new String[typeAr.length]);
     }
 
     /**
@@ -111,7 +111,7 @@ public class TupleDesc implements Serializable {
         if (td.length == 0) {
             throw new IllegalArgumentException("TDItem array must have at least one element.");
         }
-        this.typeAr = td;
+        this.tdAr = td;
         this.numFields = td.length;
     }
 
@@ -206,21 +206,10 @@ public class TupleDesc implements Serializable {
      */
     public static TupleDesc merge(TupleDesc td1, TupleDesc td2) {
         // some code goes here
-        TupleDesc td;
-        td.numFields = td1.numFields + td2.numFields;
-        /*
-        for (int i = 0; i < td1.numFields; i++) {
-            td.tdAr[i].fieldType = td1.tdAr[i].fieldType;
-            td.tdAr[i].fieldName = td1.tdAr[i].fieldName;
-        }
-        for (int i = td1.numFields; i < td2.numFields; i++) {
-            td.tdAr[i].fieldType = td2.tdAr[i].fieldType;
-            td.tdAr[i].fieldName = td2.tdAr[i].fieldName;
-        }
-        */
-        System.arrayCopy(td1.tdAr, 0, td.tdAr, 0, td1.numFields);
-        System.arrayCopy(td2.tdAr, 0, td.tdAr, td1.numFields, td2.numFields);
-        return td;
+        TDItem[] td = new TDItem[td1.tdAr.length + td2.tdAr.length];
+        System.arraycopy(td1.tdAr, 0, td, 0, td1.tdAr.length);
+        System.arraycopy(td2.tdAr, 0, td, td1.tdAr.length, td2.tdAr.length);
+        return new TupleDesc(td);
     }
 
     /**
@@ -239,14 +228,15 @@ public class TupleDesc implements Serializable {
         if (!(o instanceof TupleDesc)) {
             return false;
         }
-        if (o == this) {
+        TupleDesc _o = (TupleDesc)o;
+        if (_o == this) {
             return true;
         }
-        if (o.numFields != numFields) {
+        if (_o.numFields != numFields) {
             return false;
         }
         for (int i = 0; i < numFields; i++) {
-            if (tdAr[i] != o.tdAr[o]) {
+            if (tdAr[i] != _o.tdAr[i]) {
                 return false;
             }
         }
@@ -268,12 +258,12 @@ public class TupleDesc implements Serializable {
      */
     public String toString() {
         // some code goes here
-        String str = "";
+        StringBuffer str = new StringBuffer();
         int i = 0;
         for (; i < numFields-1; i++) {
             str.append(tdAr[i].toString() + ", ");
         }
         str.append(tdAr[i].toString());
-        return str;
+        return str.toString();
     }
 }
