@@ -55,7 +55,7 @@ public class TupleDesc implements Serializable {
     /**
      * TupleDesc Array
      */
-    private TDItem tdAr;
+    private TDItem[] tdAr;
 
     /**
      * Create a new TupleDesc with typeAr.length fields with fields of the
